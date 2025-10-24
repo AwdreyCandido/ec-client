@@ -1,6 +1,10 @@
 import Image from "next/image";
 import { stores } from "../data/placeholder";
 import Link from "next/link";
+import { FiShoppingCart } from "react-icons/fi";
+import { HiOutlineShoppingCart } from "react-icons/hi";
+import { HiOutlineShoppingBag, HiPlus } from "react-icons/hi2";
+import { TbShoppingBagPlus } from "react-icons/tb";
 
 export default function Home() {
   return (
@@ -75,26 +79,28 @@ export default function Home() {
               </div>
 
               {store.products.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
                   {store.products.map((product) => (
                     <div
                       key={product.id}
-                      className="group overflow-hidden transition-all duration-300 cursor-pointer"
+                      className="group overflow-hidden transition-all duration-300 select-none"
                     >
-                      <div className="relative rounded-2xl w-full h-56 flex items-center justify-center bg-gray-50 overflow-hidden ">
-                        <Image
-                          src={product.imageUrl}
-                          alt={product.name}
-                          width={200}
-                          height={240}
-                          className="object-contain transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <span className="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
-                          {store.name}
-                        </span>
-                      </div>
+                      <Link key={product.id} href={`/product/${product.id}`}>
+                        <div className="relative rounded-2xl w-full h-56 flex items-center justify-center bg-gray-50 overflow-hidden cursor-pointer">
+                          <Image
+                            src={product.imageUrl}
+                            alt={product.name}
+                            width={200}
+                            height={240}
+                            className="object-contain transition-transform duration-300 group-hover:scale-105"
+                          />
+                          <span className="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+                            {store.name}
+                          </span>
+                        </div>
+                      </Link>
 
-                      <div className="p-5 flex flex-col h-48">
+                      <div className="py-5 flex flex-col">
                         <h4 className="text-lg font-semibold text-gray-900 mb-1 truncate group-hover:text-blue-600">
                           {product.name}
                         </h4>
@@ -105,8 +111,11 @@ export default function Home() {
                           <span className="text-blue-700 font-bold text-xl">
                             R$ {Number(product.price).toFixed(2)}
                           </span>
-                          <button className="bg-blue-600 text-white text-base font-medium px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
-                            Comprar
+                          <button
+                            className="w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary text-secondary p-2 rounded-full bg-secondary-light hover:text-white hover:bg-secondary transition duration-300 shadow-md hover:shadow-none"
+                            title="Adicionar ao carrinho"
+                          >
+                            <TbShoppingBagPlus className="stroke-2" size={20} />
                           </button>
                         </div>
                       </div>

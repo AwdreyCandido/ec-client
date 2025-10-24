@@ -105,3 +105,155 @@ export const stores = [
     ratings: "4.90",
   },
 ];
+
+export const products = [
+  {
+    id: 1,
+    reviews: [
+      {
+        id: 1,
+        rating: 5,
+        comment: "Produto excelente! Muito rápido e silencioso.",
+        createdAt: "2025-10-23T17:37:06.000Z",
+      },
+      {
+        id: 6,
+        rating: 4,
+        comment: "Funciona bem, mas o carregador esquenta um pouco.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+      {
+        id: 12,
+        rating: 3,
+        comment: "Bom celular, mas o sistema trava às vezes.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+    ],
+    name: "Notebook Dell Inspiron",
+    description: "Notebook de alto desempenho com 16GB RAM e SSD 512GB",
+    price: "4800.00",
+    imageUrl: "https://example.com/notebook.jpg",
+    stock: 10,
+  },
+  {
+    id: 2,
+    reviews: [
+      {
+        id: 2,
+        rating: 4,
+        comment: "Bom custo-benefício, mas poderia ter mais memória.",
+        createdAt: "2025-10-23T17:37:06.000Z",
+      },
+      {
+        id: 8,
+        rating: 4,
+        comment: "Notebook rápido, só peca um pouco na bateria.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+      {
+        id: 11,
+        rating: 5,
+        comment: "Perfeito para o trabalho e estudos. Super leve.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+    ],
+    name: "Smartphone Samsung A55",
+    description: "Smartphone com ótima câmera e bateria de longa duração",
+    price: "2200.00",
+    imageUrl: "https://example.com/samsung.jpg",
+    stock: 25,
+  },
+  {
+    id: 3,
+    reviews: [
+      {
+        id: 3,
+        rating: 5,
+        comment: "Som muito limpo e ótimo isolamento acústico.",
+        createdAt: "2025-10-23T17:37:06.000Z",
+      },
+      {
+        id: 7,
+        rating: 5,
+        comment: "Excelente qualidade de som! Uso todos os dias.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+      {
+        id: 13,
+        rating: 5,
+        comment: "Headset maravilhoso, ótimo microfone.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+    ],
+    name: "Fone Bluetooth JBL",
+    description: "Fone sem fio com cancelamento de ruído e microfone embutido",
+    price: "350.00",
+    imageUrl: "https://example.com/jbl.jpg",
+    stock: 40,
+  },
+  {
+    id: 4,
+    reviews: [
+      {
+        id: 4,
+        rating: 5,
+        comment: "Um clássico que nunca envelhece.",
+        createdAt: "2025-10-23T17:37:06.000Z",
+      },
+      {
+        id: 9,
+        rating: 5,
+        comment: "História envolvente, recomendo muito.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+      {
+        id: 14,
+        rating: 4,
+        comment: "Livro muito bom, só achei o final previsível.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+    ],
+    name: "Livro - Dom Casmurro",
+    description: "Clássico da literatura brasileira, de Machado de Assis",
+    price: "45.90",
+    imageUrl: "https://example.com/domcasmurro.jpg",
+    stock: 100,
+  },
+  {
+    id: 5,
+    reviews: [
+      {
+        id: 5,
+        rating: 3,
+        comment: "Boa qualidade, mas achei o preço um pouco alto.",
+        createdAt: "2025-10-23T17:37:06.000Z",
+      },
+      {
+        id: 10,
+        rating: 2,
+        comment: "Esperava mais pelo preço, acabamento simples.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+      {
+        id: 15,
+        rating: 4,
+        comment: "Qualidade boa e entrega rápida.",
+        createdAt: "2025-10-23T18:11:51.000Z",
+      },
+    ],
+    name: "Camiseta Esportiva Nike",
+    description: "Camiseta leve e respirável para treinos",
+    price: "129.99",
+    imageUrl: "https://example.com/nike.jpg",
+    stock: 50,
+  },
+  {
+    id: 8,
+    reviews: [],
+    name: "Notebook Gamer 2",
+    description: "Notebook Gamer para gamers",
+    price: "5799.99",
+    imageUrl: "https://example.com/notebook.jpg",
+    stock: 4,
+  },
+];
