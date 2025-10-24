@@ -97,10 +97,6 @@ button {
   @apply cursor-pointer;
 }
 
-.background-image {
-  background-image: url("/assets/images/background.jpeg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  object-fit: cover;
+input {
+  @apply ring-0
 }

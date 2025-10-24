@@ -33,22 +33,40 @@ export default function RootLayout({
                   <h1 className="text-2xl font-extrabold text-gray-900 tracking-wide">
                     Ecommerce
                   </h1>
-                  <nav className="flex text-button gap-10 text-gray-700 font-medium">
-                    <a href="/" className="hover:text-secondary transition">
-                      Início
-                    </a>
-                    <a
-                      href="#stores"
-                      className="hover:text-secondary transition"
-                    >
-                      Lojas
-                    </a>
-                    <a
-                      href="#contact"
-                      className="hover:text-secondary transition"
-                    >
-                      Contato
-                    </a>
+                  <nav className="flex items-center gap-6">
+                    <div className="flex text-button gap-6 text-gray-700 font-medium">
+                      <a href="/" className="hover:text-secondary transition">
+                        Início
+                      </a>
+                      <a
+                        href="#stores"
+                        className="hover:text-secondary transition"
+                      >
+                        Lojas
+                      </a>
+                      <a
+                        href="#contact"
+                        className="hover:text-secondary transition"
+                      >
+                        Contato
+                      </a>
+                    </div>
+
+                    <div className="flex gap-4 ml-6">
+                      <a
+                        href="/auth/login"
+                        className="bg-secondary text-white font-medium px-6 py-2 rounded-xl shadow hover:bg-blue-700 transition"
+                      >
+                        Login
+                      </a>
+
+                      <a
+                        href="/auth/register"
+                        className="border border-secondary text-secondary font-medium px-6 py-2 rounded-xl hover:bg-blue-50 transition"
+                      >
+                        Cadastrar
+                      </a>
+                    </div>
                   </nav>
                 </header>
                 {children}
