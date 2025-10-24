@@ -1,15 +1,23 @@
-import { stores } from "@/src/data/placeholder";
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { Store } from "@/src/data/types/store";
 import { TbShoppingBagPlus } from "react-icons/tb";
+import { useStoresProvider } from "@/src/contexts/StoresContext";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-export default async function StoreDetails({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const store = stores.find((store) => store.id === +id);
+export default function StoreDetails() {
+  const [store, setStore] = useState<Store | undefined>();
+  const { id } = useParams<{ id: string }>();
+  const { stores } = useStoresProvider();
+
+  useEffect(() => {
+    if (stores) {
+      const store = stores?.find((store) => store.id === +id);
+      setStore(store);
+    }
+  }, [id]);
 
   return (
     <main className="flex flex-col items-center min-h-screen bg-gray-50">
@@ -17,21 +25,23 @@ export default async function StoreDetails({
         <div className="w-[80vw] flex flex-col items-center text-center space-y-6">
           <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-blue-600 shadow-lg">
             <Image
-              src={store.logoUrl}
-              alt={store.name}
+              src={store?.logoUrl}
+              alt={store?.name}
               width={128}
               height={128}
               className="object-cover"
             />
           </div>
           <h2 className="text-4xl font-extrabold text-gray-900">
-            {store.name}
+            {store?.name}
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl">{store.description}</p>
-          <p className="text-base text-gray-500">⭐ {store.ratings} / 5.0</p>
+          <p className="text-lg text-gray-600 max-w-2xl">
+            {store?.description}
+          </p>
+          <p className="text-base text-gray-500">⭐ {store?.ratings} / 5.0</p>
           <div className="flex gap-4 text-gray-700">
-            <span>📧 {store.email}</span>
-            <span>📞 {store.phone}</span>
+            <span>📧 {store?.email}</span>
+            <span>📞 {store?.phone}</span>
           </div>
         </div>
       </section>
@@ -39,9 +49,9 @@ export default async function StoreDetails({
       <section className="w-full flex justify-center bg-background">
         <div className="w-[80vw] max-w-[80vw]  py-20 space-y-12">
           <h3 className="text-2xl font-bold text-gray-900 mb-6">Produtos</h3>
-          {store.products.length > 0 ? (
+          {store?.products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-              {store.products.map((product: any) => (
+              {store?.products.map((product: any) => (
                 <Link key={product.id} href={`/product/${product.id}`}>
                   <div
                     key={product.id}
@@ -56,11 +66,11 @@ export default async function StoreDetails({
                         className="object-contain transition-transform duration-300 group-hover:scale-105"
                       />
                       <span className="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
-                        {store.name}
+                        {store?.name}
                       </span>
                     </div>
 
-                    <div className="py-5 flex flex-col h-48">
+                    <div className="py-5 flex flex-col">
                       <h4 className="text-lg font-semibold text-gray-900 mb-1 truncate group-hover:text-blue-600">
                         {product.name}
                       </h4>
