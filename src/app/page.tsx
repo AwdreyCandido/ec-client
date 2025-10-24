@@ -9,20 +9,6 @@ import { TbShoppingBagPlus } from "react-icons/tb";
 export default function Home() {
   return (
     <main className="flex flex-col items-center min-h-screen bg-gray-50">
-      <header className="w-[80vw] max-w-[80vw] bg-secondary-light py-8 px-8 flex justify-between items-center absolute top-10 z-50 backdrop-blur-md left-[50%] -translate-x-[50%] rounded-4xl">
-        <h1 className="text-2xl font-extrabold text-gray-900 tracking-wide">
-          Ecommerce
-        </h1>
-        <nav className="flex text-button gap-10 text-gray-700 font-medium">
-          <a href="#stores" className="hover:text-secondary transition">
-            Lojas
-          </a>
-          <a href="#contact" className="hover:text-secondary transition">
-            Contato
-          </a>
-        </nav>
-      </header>
-
       <section className="w-full flex justify-center px-8 md:px-20 py-36 bg-linear-to-r from-blue-50 to-blue-100 pt-[15rem] rounded-b-3xl shadow-sm">
         <div className="w-[80vw] max-w-[80vw] flex flex-col md:flex-row items-center justify-between">
           <div className="flex-1 flex justify-center">

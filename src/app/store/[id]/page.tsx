@@ -1,6 +1,7 @@
 import { stores } from "@/src/data/placeholder";
 import Image from "next/image";
 import Link from "next/link";
+import { TbShoppingBagPlus } from "react-icons/tb";
 
 export default async function StoreDetails({
   params,
@@ -70,8 +71,11 @@ export default async function StoreDetails({
                         <span className="text-blue-700 font-bold text-xl">
                           R$ {Number(product.price).toFixed(2)}
                         </span>
-                        <button className="bg-blue-600 text-white text-base font-medium px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
-                          Comprar
+                        <button
+                          className="w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary text-secondary p-2 rounded-full bg-secondary-light hover:text-white hover:bg-secondary transition duration-300 shadow-md hover:shadow-none"
+                          title="Adicionar ao carrinho"
+                        >
+                          <TbShoppingBagPlus className="stroke-2" size={20} />
                         </button>
                       </div>
                     </div>
