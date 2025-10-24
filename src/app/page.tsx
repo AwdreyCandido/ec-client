@@ -1,12 +1,15 @@
+"use client";
 import Image from "next/image";
-import { stores } from "../data/placeholder";
 import Link from "next/link";
-import { FiShoppingCart } from "react-icons/fi";
-import { HiOutlineShoppingCart } from "react-icons/hi";
-import { HiOutlineShoppingBag, HiPlus } from "react-icons/hi2";
 import { TbShoppingBagPlus } from "react-icons/tb";
+import { useStoresProvider } from "../contexts/StoresContext";
 
 export default function Home() {
+  const { stores, isLoading, error } = useStoresProvider();
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
   return (
     <main className="flex flex-col items-center min-h-screen bg-gray-50">
       <section className="w-full flex justify-center px-8 md:px-20 py-36 bg-linear-to-r from-blue-50 to-blue-100 pt-[15rem] rounded-b-3xl shadow-sm">
@@ -39,7 +42,7 @@ export default function Home() {
 
       <section id="stores" className="w-full flex justify-center bg-background">
         <div className="w-[80vw] max-w-[80vw] px-8 md:px-20 py-24 space-y-28">
-          {stores.map((store) => (
+          {stores?.map((store) => (
             <div key={store.id} className="space-y-10">
               <div className="flex items-center gap-6">
                 <Link href={`/store/${store.id}`}>

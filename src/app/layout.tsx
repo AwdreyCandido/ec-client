@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
+import ReactQueryProvider from "../providers/QueryClientProvider";
+import { StoresProvider } from "../contexts/StoresContext";
 
 const figtreeSans = Figtree({
   variable: "--font-figtree-sans",
@@ -20,25 +22,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${figtreeSans.variable} font-sans antialiased`}>
-        <header className="w-[80vw] bg-white py-8 px-8 flex justify-between items-center absolute top-10 z-50 backdrop-blur-md left-[50%] -translate-x-[50%] rounded-4xl shadow-md">
-          <h1 className="text-2xl font-extrabold text-gray-900 tracking-wide">
-            Ecommerce
-          </h1>
-          <nav className="flex text-button gap-10 text-gray-700 font-medium">
-            <a href="/" className="hover:text-secondary transition">
-              Início
-            </a>
-            <a href="#stores" className="hover:text-secondary transition">
-              Lojas
-            </a>
-            <a href="#contact" className="hover:text-secondary transition">
-              Contato
-            </a>
-          </nav>
-        </header>
-        {children}
-      </body>
+      <ReactQueryProvider>
+        <StoresProvider>
+          <body className={`${figtreeSans.variable} font-sans antialiased`}>
+            <header className="w-[80vw] bg-white py-8 px-8 flex justify-between items-center absolute top-10 z-50 backdrop-blur-md left-[50%] -translate-x-[50%] rounded-4xl shadow-md">
+              <h1 className="text-2xl font-extrabold text-gray-900 tracking-wide">
+                Ecommerce
+              </h1>
+              <nav className="flex text-button gap-10 text-gray-700 font-medium">
+                <a href="/" className="hover:text-secondary transition">
+                  Início
+                </a>
+                <a href="#stores" className="hover:text-secondary transition">
+                  Lojas
+                </a>
+                <a href="#contact" className="hover:text-secondary transition">
+                  Contato
+                </a>
+              </nav>
+            </header>
+            {children}
+          </body>
+        </StoresProvider>
+      </ReactQueryProvider>
     </html>
   );
 }
