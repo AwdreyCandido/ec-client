@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+:root {
+  font-size: 62.5%;
+  --background: #ededed;
+  --foreground: #292929;
+
+  --text-base: 1.4rem;
+  --text-button: 1.6rem;
+  --text-subheading: 1.8rem;
+  --text-body: 2rem;
+  --text-large: 2.2rem;
+  --text-xl: 2.4rem;
+  --text-heading: 2.6rem;
+  --text-title: 3.2rem;
+
+  --primary: #34b53a;
+  --secondary: #4339f2;
+  --success: #00c951;
+  --info: #02a0fc;
+  --danger: #ff3a29;
+  --warning: #ffb200;
+
+  /* Base Text Colors */
+  --dark-gray: #323232;
+  --gray: #525252;
+  --light-gray: #c2c2c2;
+
+  --primary-light: #e2fbd7;
+  --secondary-light: #dad7fe;
+  --success-light: #66df97;
+  --info-light: #ccf8fe;
+  --danger-light: #ffe5d3;
+  --warning-light: #fff5cc;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-figtree-sans);
+
+  --text-base: var(--text-base);
+  --text-button: var(--text-button);
+  --text-subheading: var(--text-subheading);
+  --text-body: var(--text-body);
+  --text-large: var(--text-large);
+  --text-xl: var(--text-xl);
+  --text-heading: var(--text-heading);
+  --text-title: var(--text-title);
+
+  --text-primary: var(--primary);
+  --text-secondary: var(--secondary);
+  --text-success: var(--success);
+  --text-info: var(--info);
+  --text-danger: var(--danger);
+  --text-warning: var(--warning);
+  --text-dark-gray: var(--dark-gray);
+  --text-gray: var(--gray);
+  --text-light-gray: var(--light-gray);
+
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-success: var(--success);
+  --color-info: var(--info);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-dark-gray: var(--dark-gray);
+  --color-gray: var(--gray);
+  --color-light-gray: var(--light-gray);
+
+  --color-primary-light: var(--primary-light);
+  --color-secondary-light: var(--secondary-light);
+  --color-success-light: var(--success-light);
+  --color-info-light: var(--info-light);
+  --color-danger-light: var(--danger-light);
+  --color-warning-light: var(--warning-light);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #191919;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-size: var(--text-base);
+}
+
+label {
+  @apply text-[1.4rem] font-sans;
+}
+
+button {
+  @apply cursor-pointer;
+}
+
+.background-image {
+  background-image: url("/assets/images/background.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  object-fit: cover;
+}
