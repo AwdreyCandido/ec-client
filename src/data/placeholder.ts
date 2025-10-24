@@ -1,0 +1,107 @@
+export const stores = [
+  {
+    id: 1,
+    products: [
+      {
+        id: 1,
+        name: "Notebook Dell Inspiron",
+        description: "Notebook de alto desempenho com 16GB RAM e SSD 512GB",
+        price: "4800.00",
+        imageUrl: "https://example.com/notebook.jpg",
+        stock: 10,
+      },
+      {
+        id: 8,
+        name: "Notebook Gamer 2",
+        description: "Notebook Gamer para gamers",
+        price: "5799.99",
+        imageUrl: "https://example.com/notebook.jpg",
+        stock: 4,
+      },
+    ],
+    name: "TechStore Recife",
+    description:
+      "Loja especializada em eletrônicos e notebooks de alto desempenho.",
+    logoUrl: "https://example.com/techstore-logo.jpg",
+    email: "contato@techstore.com",
+    phone: "81999990001",
+    ratings: "4.80",
+  },
+  {
+    id: 2,
+    products: [
+      {
+        id: 2,
+        name: "Smartphone Samsung A55",
+        description: "Smartphone com ótima câmera e bateria de longa duração",
+        price: "2200.00",
+        imageUrl: "https://example.com/samsung.jpg",
+        stock: 25,
+      },
+    ],
+    name: "MobileCenter",
+    description: "Loja de smartphones, acessórios e gadgets.",
+    logoUrl: "https://example.com/mobilecenter-logo.jpg",
+    email: "suporte@mobilecenter.com",
+    phone: "81999990002",
+    ratings: "4.50",
+  },
+  {
+    id: 3,
+    products: [
+      {
+        id: 4,
+        name: "Livro - Dom Casmurro",
+        description: "Clássico da literatura brasileira, de Machado de Assis",
+        price: "45.90",
+        imageUrl: "https://example.com/domcasmurro.jpg",
+        stock: 100,
+      },
+    ],
+    name: "BookWorld",
+    description: "Livraria com vasta coleção de clássicos e lançamentos.",
+    logoUrl: "https://example.com/bookworld-logo.jpg",
+    email: "contato@bookworld.com",
+    phone: "81999990003",
+    ratings: "4.70",
+  },
+  {
+    id: 4,
+    products: [
+      {
+        id: 5,
+        name: "Camiseta Esportiva Nike",
+        description: "Camiseta leve e respirável para treinos",
+        price: "129.99",
+        imageUrl: "https://example.com/nike.jpg",
+        stock: 50,
+      },
+    ],
+    name: "FashionHub",
+    description: "Roupas e acessórios esportivos e casuais.",
+    logoUrl: "https://example.com/fashionhub-logo.jpg",
+    email: "vendas@fashionhub.com",
+    phone: "81999990004",
+    ratings: "4.60",
+  },
+  {
+    id: 5,
+    products: [
+      {
+        id: 3,
+        name: "Fone Bluetooth JBL",
+        description:
+          "Fone sem fio com cancelamento de ruído e microfone embutido",
+        price: "350.00",
+        imageUrl: "https://example.com/jbl.jpg",
+        stock: 40,
+      },
+    ],
+    name: "SoundHouse",
+    description: "Equipamentos de áudio e fones de ouvido de alta qualidade.",
+    logoUrl: "https://example.com/soundhouse-logo.jpg",
+    email: "info@soundhouse.com",
+    phone: "81999990005",
+    ratings: "4.90",
+  },
+];
