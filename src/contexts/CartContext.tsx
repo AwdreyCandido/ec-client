@@ -1,25 +1,39 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { JSX, createContext, useContext } from "react";
+import { createContext, useContext, ReactNode } from "react";
 import { Store } from "../data/types/store";
+import { useAuthProvider } from "./AuthContext";
+import { Cart } from "../data/types/cart";
 
 interface CartContextProps {
-  stores: Store[] | undefined;
+  cart: Cart | undefined;
   isLoading: boolean;
   error: any;
 }
 
-const CartContext = createContext({} as CartContextProps);
+const CartContext = createContext<CartContextProps>({} as CartContextProps);
 
 interface CartProviderProps {
-  children: JSX.Element;
+  children: ReactNode;
 }
 
 export const CartProvider = ({ children }: CartProviderProps) => {
+  const { user } = useAuthProvider();
 
+  const { data, isLoading, error } = useQuery<Cart>({
+    queryKey: ["stores", user?.cart.id],
+    queryFn: () =>
+      fetch(`http://127.0.0.1:3000/carts/${user?.cart.id}`).then((res) =>
+        res.json()
+      ),
+    enabled: !!user?.cart.id,
+  });
 
-  
-  const value = {} as CartContextProps;
+  const value: CartContextProps = {
+    cart: data,
+    isLoading,
+    error,
+  };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };

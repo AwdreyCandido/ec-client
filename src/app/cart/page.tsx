@@ -1,45 +1,17 @@
+"use client";
 import Image from "next/image";
+import { useCartProvider } from "@/src/contexts/CartContext";
 import { FiTrash2, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi";
 
 export default function CartPage() {
-  const cart = {
-    id: 1,
-    items: [
-      {
-        id: 1,
-        product: {
-          id: 1,
-          name: "Notebook Dell Inspiron",
-          description: "Notebook de alto desempenho com 16GB RAM e SSD 512GB",
-          price: "4800.00",
-          imageUrl: "https://example.com/notebook.jpg",
-          stock: 10,
-        },
-        quantity: 2,
-        unitPrice: "4800.00",
-        totalPrice: "9600.00",
-      },
-      {
-        id: 2,
-        product: {
-          id: 2,
-          name: "Smartphone Samsung A55",
-          description: "Smartphone com ótima câmera e bateria de longa duração",
-          price: "2200.00",
-          imageUrl: "https://example.com/samsung.jpg",
-          stock: 25,
-        },
-        quantity: 1,
-        unitPrice: "2200.00",
-        totalPrice: "2200.00",
-      },
-    ],
-  };
+  const { cart, isLoading, error } = useCartProvider();
 
-  const subtotal = cart.items.reduce(
-    (sum, item) => sum + parseFloat(item.totalPrice),
-    0
-  );
+  if (isLoading) return <p>Loading...</p>;
+  if (error || !cart) return <p>Error: {error?.message}</p>;
+
+  const subtotal =
+    cart?.items.reduce((acc, item) => acc + parseFloat(item.totalPrice), 0) ||
+    0;
 
   return (
     <main className="flex flex-col h-[100vh] items-center min-h-screen bg-gray-50">
@@ -88,7 +60,7 @@ export default function CartPage() {
                       </div>
                     </div>
 
-                    <div className="text-right">
+                    <div className="text-left w-[16rem]">
                       <p className="text-large font-semibold text-blue-700">
                         R$ {parseFloat(item.totalPrice).toFixed(2)}
                       </p>
@@ -127,7 +99,7 @@ export default function CartPage() {
               </div>
             </div>
 
-            <button className="w-full mt-8 bg-blue-600 text-white py-4 rounded-xl text-lg font-semibold shadow hover:bg-blue-700 hover:scale-105 transition">
+            <button className="w-full mt-8 bg-blue-600 text-white py-4 rounded-xl text-button font-semibold shadow hover:bg-blue-700 hover:scale-105 transition">
               Finalizar compra
             </button>
           </div>
