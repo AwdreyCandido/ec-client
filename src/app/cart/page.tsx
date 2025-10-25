@@ -2,10 +2,9 @@
 import Image from "next/image";
 import { useCartProvider } from "@/src/contexts/CartContext";
 import { FiTrash2, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi";
-import { removeCartItem, addItemToCart } from "@/src/services/cart";
-import { AddItemDto } from "@/src/data/types/cart";
+import { removeCartItem } from "@/src/services/cart";
 
-export default function CartPage() {
+/export default function CartPage() {
   const { cart, isLoading, error, refetchCart } = useCartProvider();
 
   if (isLoading) return <p>Loading...</p>;
@@ -24,25 +23,11 @@ export default function CartPage() {
     }
   };
 
-  const handleUpdateQuantity = async (productId: number, delta: number) => {
-    const item = cart.items.find((i) => i.product.id === productId);
+  const handleUpdateQuantity = async (itemId: number, change: number) => {
+    const item = cart.items.find((item) => item.id === itemId);
     if (!item) return;
 
-    if (item.quantity + delta <= 0) {
-      return await handleRemoveItem(item.id);
-    }
-
-    const response = await addItemToCart({
-      cartId: cart.id,
-      productId: productId,
-      quantity: delta,
-    });
-
-    if (!response.message) {
-      refetchCart();
-    } else {
-      console.error("Erro ao atualizar quantidade:", response.message);
-    }
+    // amanha eu termino
   };
 
   return (
@@ -78,25 +63,18 @@ export default function CartPage() {
                         <p className="text-gray-500 text-base line-clamp-1 max-w-[20rem]">
                           {item.product.description}
                         </p>
-
                         <div className="flex items-center gap-4 mt-3">
                           <button
-                            onClick={() =>
-                              handleUpdateQuantity(item.product.id, -1)
-                            }
+                            onClick={() => handleUpdateQuantity(item.id, -1)}
                             className="bg-gray-300 hover:bg-gray-200 p-2 rounded-lg transition"
                           >
                             <FiMinus className="text-gray-700" />
                           </button>
-
                           <span className="text-gray-800 font-medium text-lg">
                             {item.quantity}
                           </span>
-
                           <button
-                            onClick={() =>
-                              handleUpdateQuantity(item.product.id, 1)
-                            }
+                            onClick={() => handleUpdateQuantity(item.id, +1)}
                             className="bg-gray-300 hover:bg-gray-200 p-2 rounded-lg transition"
                           >
                             <FiPlus className="text-gray-700" />
