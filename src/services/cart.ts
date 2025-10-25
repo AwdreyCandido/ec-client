@@ -1,35 +1,16 @@
+import { Cart } from "../data/types/cart";
 import { ValidationErrorResponse } from "../data/types/error-response";
 import { API_URL } from "../utils/constants";
 
-interface LoginDto {
-  email: string;
-  password: string;
+interface AddItemDto {
+  cartId: number;
+  productId: number;
+  quantity?: number;
 }
 
-interface RegisterDto {
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface Cart {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface User {
-  id: number;
-  cart: Cart;
-  name: string;
-  email: string;
-  address: string | null;
-  role: string;
-}
-
-export async function loginUser(loginDto: LoginDto): Promise<any> {
+export async function addItemToCart(addItemDto: AddItemDto): Promise<any> {
   try {
-    const { data } = await API_URL.post<User>(`/auth/login`, loginDto);
+    const { data } = await API_URL.post<Cart>(`/carts`, addItemDto);
 
     return data;
   } catch (error: any) {
@@ -44,9 +25,9 @@ export async function loginUser(loginDto: LoginDto): Promise<any> {
   }
 }
 
-export async function registerUser(registerDto: RegisterDto): Promise<any> {
+export async function removeCartItem(itemId: number): Promise<any> {
   try {
-    const { data } = await API_URL.post<User>(`/auth/register`, registerDto);
+    const { data } = await API_URL.delete<Cart>(`/carts/${itemId}`);
 
     return data;
   } catch (error: any) {

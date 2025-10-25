@@ -3,9 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { TbShoppingBagPlus } from "react-icons/tb";
 import { useStoresProvider } from "../contexts/StoresContext";
+import { addItemToCart } from "../services/cart";
+import { useAuthProvider } from "../contexts/AuthContext";
+import { QueryKey, useQueryClient } from "@tanstack/react-query";
 
 export default function Home() {
   const { stores, isLoading, error } = useStoresProvider();
+  const { user } = useAuthProvider();
+  const queryClient = useQueryClient();
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -101,6 +106,15 @@ export default function Home() {
                             R$ {Number(product.price).toFixed(2)}
                           </span>
                           <button
+                            onClick={async () => {
+                              if (!user) return alert("Faça login primeiro!");
+                              const response = await addItemToCart({
+                                cartId: user.cart.id,
+                                productId: product.id,
+                              });
+                             queryClient.invalidateQueries(["cart", user?.cart.id]);
+                              console.log("add item", response);
+                            }}
                             className="w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary text-secondary p-2 rounded-full bg-secondary-light hover:text-white hover:bg-secondary transition duration-300 shadow-md hover:shadow-none"
                             title="Adicionar ao carrinho"
                           >
@@ -120,12 +134,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      <footer className="w-full bg-gray-900 text-gray-300 text-center py-8">
-        <p className="mb-4">
-          © {new Date().getFullYear()} Ecommerce. Todos os direitos reservados.
-        </p>
-      </footer>
     </main>
   );
 }

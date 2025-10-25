@@ -2,9 +2,11 @@
 import Image from "next/image";
 import { useCartProvider } from "@/src/contexts/CartContext";
 import { FiTrash2, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi";
+import { removeCartItem, addItemToCart } from "@/src/services/cart";
+import { AddItemDto } from "@/src/data/types/cart";
 
 export default function CartPage() {
-  const { cart, isLoading, error } = useCartProvider();
+  const { cart, isLoading, error, refetchCart } = useCartProvider();
 
   if (isLoading) return <p>Loading...</p>;
   if (error || !cart) return <p>Error: {error?.message}</p>;
@@ -13,8 +15,38 @@ export default function CartPage() {
     cart?.items.reduce((acc, item) => acc + parseFloat(item.totalPrice), 0) ||
     0;
 
+  const handleRemoveItem = async (itemId: number) => {
+    const response = await removeCartItem(itemId);
+    if (!response.message) {
+      refetchCart();
+    } else {
+      console.error("Erro ao remover item:", response.message);
+    }
+  };
+
+  const handleUpdateQuantity = async (productId: number, delta: number) => {
+    const item = cart.items.find((i) => i.product.id === productId);
+    if (!item) return;
+
+    if (item.quantity + delta <= 0) {
+      return await handleRemoveItem(item.id);
+    }
+
+    const response = await addItemToCart({
+      cartId: cart.id,
+      productId: productId,
+      quantity: delta,
+    });
+
+    if (!response.message) {
+      refetchCart();
+    } else {
+      console.error("Erro ao atualizar quantidade:", response.message);
+    }
+  };
+
   return (
-    <main className="flex flex-col h-[100vh] items-center min-h-screen bg-gray-50">
+    <main className="flex flex-col items-center min-h-screen bg-gray-50">
       <section className="w-full h-full flex justify-center pt-[15rem] pb-24">
         <div className="w-[80vw] max-w-[80vw] grid grid-cols-1 lg:grid-cols-3 gap-16">
           <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 p-10 h-fit">
@@ -46,14 +78,27 @@ export default function CartPage() {
                         <p className="text-gray-500 text-base line-clamp-1 max-w-[20rem]">
                           {item.product.description}
                         </p>
+
                         <div className="flex items-center gap-4 mt-3">
-                          <button className="bg-gray-300 hover:bg-gray-200 p-2 rounded-lg transition">
+                          <button
+                            onClick={() =>
+                              handleUpdateQuantity(item.product.id, -1)
+                            }
+                            className="bg-gray-300 hover:bg-gray-200 p-2 rounded-lg transition"
+                          >
                             <FiMinus className="text-gray-700" />
                           </button>
+
                           <span className="text-gray-800 font-medium text-lg">
                             {item.quantity}
                           </span>
-                          <button className="bg-gray-300 hover:bg-gray-200 p-2 rounded-lg transition">
+
+                          <button
+                            onClick={() =>
+                              handleUpdateQuantity(item.product.id, 1)
+                            }
+                            className="bg-gray-300 hover:bg-gray-200 p-2 rounded-lg transition"
+                          >
                             <FiPlus className="text-gray-700" />
                           </button>
                         </div>
@@ -64,7 +109,10 @@ export default function CartPage() {
                       <p className="text-large font-semibold text-blue-700">
                         R$ {parseFloat(item.totalPrice).toFixed(2)}
                       </p>
-                      <button className="mt-3 text-red-500 hover:text-red-700 transition flex items-center gap-1 justify-end">
+                      <button
+                        onClick={() => handleRemoveItem(item.id)}
+                        className="mt-3 text-red-500 hover:text-red-700 transition flex items-center gap-1 justify-end"
+                      >
                         <FiTrash2 /> Remover
                       </button>
                     </div>
@@ -105,12 +153,6 @@ export default function CartPage() {
           </div>
         </div>
       </section>
-
-      <footer className="w-full bg-gray-900 text-gray-300 text-center py-8">
-        <p className="mb-4">
-          © {new Date().getFullYear()} Ecommerce. Todos os direitos reservados.
-        </p>
-      </footer>
     </main>
   );
 }
