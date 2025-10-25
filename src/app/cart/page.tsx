@@ -4,7 +4,7 @@ import { useCartProvider } from "@/src/contexts/CartContext";
 import { FiTrash2, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi";
 import { removeCartItem } from "@/src/services/cart";
 
-/export default function CartPage() {
+export default function CartPage() {
   const { cart, isLoading, error, refetchCart } = useCartProvider();
 
   if (isLoading) return <p>Loading...</p>;
