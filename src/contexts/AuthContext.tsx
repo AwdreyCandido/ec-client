@@ -5,8 +5,9 @@ import { User } from "../data/types/user";
 interface AuthContextProps {
   user: User | null;
   token: string | null;
-  saveUser: (user: User) => void;
+  saveUser: (user: User, token?: string) => void;
   logout: () => void;
+  updateUser: (user: Partial<User>) => void;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -17,9 +18,7 @@ interface AuthProviderProps {
 
 export const saveUsertoLocalStorage = (user: User, token?: string) => {
   localStorage.setItem("user", JSON.stringify(user));
-  if (token) {
-    localStorage.setItem("token", token);
-  }
+  if (token) localStorage.setItem("token", token);
 };
 
 export const getUserFromLocalStorage = (): User | null => {
@@ -40,23 +39,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const stored = getUserFromLocalStorage();
-    setUser(stored)
+    setUser(stored);
+    setToken(getToken());
   }, []);
 
-  const saveUser = (userData: User) => {
+  const saveUser = (userData: User, tokenData?: string) => {
     setUser(userData);
-    saveUsertoLocalStorage(userData);
+    if (tokenData) setToken(tokenData);
+    saveUsertoLocalStorage(userData, tokenData);
+  };
+
+  const updateUser = (updates: Partial<User>) => {
+    if (!user) return;
+    // const updatedUser = { ...user, ...updates };
+    // request to api
+    // setUser(updatedUser);
+    // saveUsertoLocalStorage(updatedUser, token ?? undefined);
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
+    clearLocalStorage();
   };
 
   const value: AuthContextProps = {
     user,
     token,
     saveUser,
+    updateUser,
     logout,
   };
 
