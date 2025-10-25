@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import TextInput from "@/src/components/ui/inputs/TextInput";
 import { useRouter } from "next/navigation";
+import { registerUser } from "@/src/services/auth";
+import { useAuthProvider } from "@/src/contexts/AuthContext";
+import { User } from "@/src/data/types/user";
 
 interface RegisterData {
   name: string;
@@ -18,6 +21,7 @@ export default function Register() {
   });
 
   const router = useRouter();
+  const { saveUser } = useAuthProvider();
 
   const handleRegisterForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -27,9 +31,16 @@ export default function Register() {
     }));
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
     console.log(registerData);
-    // router.replace("/auth/login");
+    const response = await registerUser(registerData);
+    if (response?.id) {
+      const user: User = response;
+      saveUser(user);
+      router.replace("/");
+    } else {
+      console.log("Register error:", response?.message);
+    }
   };
 
   return (

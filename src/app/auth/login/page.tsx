@@ -4,10 +4,13 @@ import React, { useState } from "react";
 import TextInput from "@/src/components/ui/inputs/TextInput";
 import { useRouter } from "next/navigation";
 import { FiLogIn } from "react-icons/fi";
+import { loginUser } from "@/src/services/auth";
+import { useAuthProvider } from "@/src/contexts/AuthContext";
+import { User } from "@/src/data/types/user";
 
 interface LoginData {
-  email: string | null;
-  password: string | null;
+  email: string;
+  password: string;
 }
 
 export default function Login() {
@@ -16,6 +19,7 @@ export default function Login() {
     password: "",
   });
   const router = useRouter();
+  const { saveUser } = useAuthProvider();
 
   const handleLoginForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -25,9 +29,15 @@ export default function Login() {
     }));
   };
 
-  const submitForm = () => {
-    console.log(loginData);
-    // router.replace("/");
+  const submitForm = async () => {
+    const response = await loginUser(loginData);
+    if (response?.id) {
+      const user: User = response;
+      saveUser(user);
+      router.replace("/");
+    } else {
+      console.log("Login error:", response?.message);
+    }
   };
 
   return (
