@@ -29,6 +29,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       ),
     enabled: !!user?.cart.id,
     refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const value: CartContextProps = {

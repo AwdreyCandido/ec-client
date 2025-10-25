@@ -31,7 +31,7 @@ export default function RootLayout({
             <CartProvider>
               <body className={`${figtreeSans.variable} font-sans antialiased`}>
                 <NavBar />
-                {children}
+                <main className="min-h-screen">{children}</main>
                 <footer className="w-full bg-gray-900 text-gray-300 text-center py-8">
                   <p className="mb-4">
                     © {new Date().getFullYear()} Ecommerce. Todos os direitos

@@ -6,6 +6,7 @@ import { useStoresProvider } from "../contexts/StoresContext";
 import { addItemToCart } from "../services/cart";
 import { useAuthProvider } from "../contexts/AuthContext";
 import { QueryKey, useQueryClient } from "@tanstack/react-query";
+import placeholder from "./../../public/assets/images/placeholder.png";
 
 export default function Home() {
   const { stores, isLoading, error } = useStoresProvider();
@@ -15,9 +16,18 @@ export default function Home() {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
+  const handleAddCartItem = async (cartId: number, productId: number) => {
+    const response = await addItemToCart({
+      cartId: cartId,
+      productId: productId,
+    });
+    queryClient.invalidateQueries(["cart", user?.cart.id]);
+    console.log("add item", response);
+  };
+
   return (
-    <main className="flex flex-col items-center min-h-screen bg-gray-50">
-      <section className="w-full flex justify-center px-8 md:px-20 py-36 bg-linear-to-r from-blue-50 to-blue-100 pt-[15rem] rounded-b-3xl shadow-sm">
+    <main className="flex flex-col items-center min-h-screen bg-background">
+      <section className="h-screen w-full flex justify-center px-8 md:px-20 py-36 bg-linear-to-br from-secondary-light from-40% to-secondary pt-[15rem] rounded-tl-[15rem] rounded-br-[15rem] shadow-sm">
         <div className="w-[80vw] max-w-[80vw] flex flex-col md:flex-row items-center justify-between">
           <div className="flex-1 flex justify-center">
             <div className="w-[50rem] h-[40rem] ">
@@ -35,8 +45,8 @@ export default function Home() {
           </div>
           <div className="flex-1 mt-12 md:mt-0 flex justify-center">
             <Image
-              src="/assets/placeholder.png"
-              alt="Compras online"
+              src={placeholder}
+              alt={""}
               width={500}
               height={400}
               className="rounded-xl shadow-sm bg-white"
@@ -51,13 +61,12 @@ export default function Home() {
             <div key={store.id} className="space-y-10">
               <div className="flex items-center gap-6">
                 <Link href={`/store/${store.id}`}>
-                  <div className="w-[10rem] h-[10rem] rounded-full overflow-hidden border-4 border-blue-600 shadow-md">
+                  <div className="relative w-[10rem] h-[10rem] rounded-full overflow-hidden border-4 border-secondary shadow-md">
                     <Image
                       src={store.logoUrl}
                       alt={store.name}
-                      width={96}
-                      height={96}
-                      className="object-cover"
+                      fill
+                      className="object-cover "
                     />
                   </div>
                 </Link>
@@ -79,7 +88,10 @@ export default function Home() {
                       key={product.id}
                       className="group overflow-hidden transition-all duration-300 select-none"
                     >
-                      <Link key={product.id} href={`/product/${product.id}`}>
+                      <Link
+                        key={product.id}
+                        href={`/product/${product.id}`}
+                      >
                         <div className="relative rounded-2xl w-full h-56 flex items-center justify-center bg-gray-50 overflow-hidden cursor-pointer">
                           <Image
                             src={product.imageUrl}
@@ -106,14 +118,9 @@ export default function Home() {
                             R$ {Number(product.price).toFixed(2)}
                           </span>
                           <button
-                            onClick={async () => {
+                            onClick={() => {
                               if (!user) return alert("Faça login primeiro!");
-                              const response = await addItemToCart({
-                                cartId: user.cart.id,
-                                productId: product.id,
-                              });
-                             queryClient.invalidateQueries(["cart", user?.cart.id]);
-                              console.log("add item", response);
+                              handleAddCartItem(user.cart.id, product.id);
                             }}
                             className="w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary text-secondary p-2 rounded-full bg-secondary-light hover:text-white hover:bg-secondary transition duration-300 shadow-md hover:shadow-none"
                             title="Adicionar ao carrinho"

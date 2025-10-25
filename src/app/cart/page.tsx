@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useCartProvider } from "@/src/contexts/CartContext";
 import { FiTrash2, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi";
-import { removeCartItem } from "@/src/services/cart";
+import { addItemToCart, removeCartItem } from "@/src/services/cart";
 
 export default function CartPage() {
   const { cart, isLoading, error, refetchCart } = useCartProvider();
@@ -23,11 +23,35 @@ export default function CartPage() {
     }
   };
 
-  const handleUpdateQuantity = async (itemId: number, change: number) => {
+  const handleUpdateQuantity = async (itemId: number, op: "add" | "remove") => {
     const item = cart.items.find((item) => item.id === itemId);
     if (!item) return;
 
-    // amanha eu termino
+    const newQuantity = op === "remove" ? item.quantity - 1 : item.quantity + 1;
+
+    if (newQuantity <= 0) {
+      await handleRemoveItem(item.id);
+      return;
+    }
+
+    console.log({
+      cartId: cart.id,
+      productId: item.product.id,
+      quantity: newQuantity,
+    });
+
+    const response = await addItemToCart({
+      cartId: cart.id,
+      productId: item.product.id,
+      quantity: newQuantity,
+    });
+
+    if (!response.message) {
+      refetchCart();
+    } else {
+      alert("Erro ao atualizar quantidades blablabla");
+    }
+    console.log(response);
   };
 
   return (
@@ -47,13 +71,12 @@ export default function CartPage() {
                     className="flex items-center justify-between not-last:border-b border-gray-200 pb-6"
                   >
                     <div className="flex items-center gap-6">
-                      <div className="w-[7.3rem] h-[7.3rem] rounded-xl overflow-hidden bg-gray-300 flex items-center justify-center">
+                      <div className="relative w-[7.3rem] h-[7.3rem] rounded-xl overflow-hidden bg-gray-300 flex items-center justify-center">
                         <Image
                           src={item.product.imageUrl}
                           alt={item.product.name}
-                          width={96}
-                          height={96}
-                          className="object-contain"
+                          fill
+                          className="object-cover"
                         />
                       </div>
                       <div>
@@ -65,7 +88,9 @@ export default function CartPage() {
                         </p>
                         <div className="flex items-center gap-4 mt-3">
                           <button
-                            onClick={() => handleUpdateQuantity(item.id, -1)}
+                            onClick={() =>
+                              handleUpdateQuantity(item.id, "remove")
+                            }
                             className="bg-gray-300 hover:bg-gray-200 p-2 rounded-lg transition"
                           >
                             <FiMinus className="text-gray-700" />
@@ -74,7 +99,7 @@ export default function CartPage() {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => handleUpdateQuantity(item.id, +1)}
+                            onClick={() => handleUpdateQuantity(item.id, "add")}
                             className="bg-gray-300 hover:bg-gray-200 p-2 rounded-lg transition"
                           >
                             <FiPlus className="text-gray-700" />
