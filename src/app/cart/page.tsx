@@ -2,10 +2,18 @@
 import Image from "next/image";
 import { useCartProvider } from "@/src/contexts/CartContext";
 import { FiTrash2, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi";
-import { addItemToCart, removeCartItem } from "@/src/services/cart";
+import {
+  addItemToCart,
+  createOrder,
+  OrderResponse,
+  removeCartItem,
+  transformCartToOrders,
+} from "@/src/services/cart";
+import { useAuthProvider } from "@/src/contexts/AuthContext";
 
 export default function CartPage() {
   const { cart, isLoading, error, refetchCart } = useCartProvider();
+  const { user } = useAuthProvider();
 
   if (isLoading) return <p>Loading...</p>;
   if (error || !cart) return <p>Error: {error?.message}</p>;
@@ -52,6 +60,19 @@ export default function CartPage() {
       alert("Erro ao atualizar quantidades blablabla");
     }
     console.log(response);
+  };
+
+  const handleCreateOrder = async () => {
+    if (!user) return;
+    const orders = transformCartToOrders(cart, user.id);
+    const response = await createOrder(user.id, orders);
+    if (!response.message) {
+      const group: OrderResponse = response;
+      refetchCart();
+      console.log(orders, group);
+    } else {
+      console.log("Order error:", response?.message);
+    }
   };
 
   return (
@@ -150,7 +171,10 @@ export default function CartPage() {
               </div>
             </div>
 
-            <button className="w-full mt-8 bg-blue-600 text-white py-4 rounded-xl text-button font-semibold shadow hover:bg-blue-700 hover:scale-105 transition">
+            <button
+              onClick={handleCreateOrder}
+              className="w-full mt-8 bg-secondary text-white py-4 rounded-xl text-button font-semibold shadow hover:bg-blue-700 transition"
+            >
               Finalizar compra
             </button>
           </div>

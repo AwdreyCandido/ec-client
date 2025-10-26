@@ -5,18 +5,17 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { User } from "@/src/data/types/user";
 import { HiOutlinePencilSquare, HiXMark } from "react-icons/hi2";
+import { updateUser, UpdateUserDto } from "@/src/services/user";
 
 const userIcon =
   "https://i.pinimg.com/736x/20/05/e2/2005e27a39fa5f6d97b2e0a95233b2be.jpg";
 
 export default function ProfilePage() {
-  const { user, logout, updateUser } = useAuthProvider();
+  const { user, logout, updateUser: saveUpdatedUser } = useAuthProvider();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
 
-  const [userData, setUserData] = useState<
-    Pick<User, "name" | "email" | "address">
-  >({
+  const [userData, setUserData] = useState<UpdateUserDto>({
     name: "",
     email: "",
     address: "",
@@ -40,23 +39,31 @@ export default function ProfilePage() {
     }));
   };
 
-  const handleSave = () => {
-    if (updateUser) updateUser(userData);
-    setIsEditing(false);
-  };
-
   if (!user)
     return (
       <main className="flex flex-col font-mono items-center justify-center min-h-screen bg-gray-50">
         <p className="text-gray text-base mb-4">Você não está logado.</p>
         <button
-          onClick={() => router.push("/login")}
+          onClick={() => router.push("/auth/login")}
           className="bg-secondary text-white px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition"
         >
           Fazer login
         </button>
       </main>
     );
+
+  const handleSave = async () => {
+    const response = await updateUser(user.id, userData);
+    if (response?.id) {
+      const user: User = response;
+      console.log(user);
+    } else {
+      console.log("Login error:", response?.message);
+    }
+
+    if (saveUpdatedUser) saveUpdatedUser(userData);
+    setIsEditing(false);
+  };
 
   return (
     <main className="flex flex-col items-center min-h-screen bg-background">
@@ -75,7 +82,13 @@ export default function ProfilePage() {
               <h2 className="text-4xl font-extrabold text-gray-900 mb-2">
                 Olá, {user.name.split(" ")[0]} 👋
               </h2>
-              <p className="text-gray-600 text-base">{user.email}</p>
+              <p className="text-gray text-base">{user.email}</p>
+              <div className="flex gap-2 text-sm">
+                <p className="text-gray">Membro desde:</p>
+                <p className="text-gray">
+                  {new Date(user.cart.createdAt).toLocaleDateString()}
+                </p>
+              </div>
             </div>
           </div>
           <div className="mt-10 md:mt-0">
@@ -128,7 +141,7 @@ export default function ProfilePage() {
                     className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                   />
                 ) : (
-                  <p className="text-gray-600 text-base">{user.name}</p>
+                  <p className="text-gray text-base">{user.name}</p>
                 )}
               </div>
 
@@ -145,7 +158,7 @@ export default function ProfilePage() {
                     className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                   />
                 ) : (
-                  <p className="text-gray-600 text-base">{user.email}</p>
+                  <p className="text-gray text-base">{user.email}</p>
                 )}
               </div>
 
@@ -162,7 +175,7 @@ export default function ProfilePage() {
                     className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                   />
                 ) : (
-                  <p className="text-gray-600 text-base">
+                  <p className="text-gray text-base">
                     {user.address ?? "Não informado"}
                   </p>
                 )}
@@ -183,7 +196,7 @@ export default function ProfilePage() {
             <h3 className="text-subheading font-bold text-gray-900 mb-4">
               Histórico
             </h3>
-            <p className="text-gray-600 text-base">
+            <p className="text-gray text-base">
               Último login:{" "}
               <span className="font-semibold text-gray-800">
                 {new Date().toLocaleDateString("pt-BR")}

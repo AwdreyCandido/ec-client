@@ -51,10 +51,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const updateUser = (updates: Partial<User>) => {
     if (!user) return;
-    // const updatedUser = { ...user, ...updates };
-    // request to api
-    // setUser(updatedUser);
-    // saveUsertoLocalStorage(updatedUser, token ?? undefined);
+    const updatedUser = { ...user, ...updates };
+    setUser(updatedUser);
+    saveUsertoLocalStorage(updatedUser, token ?? undefined);
   };
 
   const logout = () => {
