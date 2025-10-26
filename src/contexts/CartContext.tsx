@@ -4,6 +4,7 @@ import { createContext, useContext, ReactNode } from "react";
 import { Store } from "../data/types/store";
 import { useAuthProvider } from "./AuthContext";
 import { Cart } from "../data/types/cart";
+import { API_PATH } from "../utils/constants";
 
 interface CartContextProps {
   cart: Cart | undefined;
@@ -24,7 +25,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const { data, isLoading, error, refetch } = useQuery<Cart>({
     queryKey: ["cart", user?.cart.id],
     queryFn: () =>
-      fetch(`http://127.0.0.1:3000/carts/${user?.cart.id}`).then((res) =>
+      fetch(`${API_PATH}/carts/${user?.cart.id}`).then((res) =>
         res.json()
       ),
     enabled: !!user?.cart.id,

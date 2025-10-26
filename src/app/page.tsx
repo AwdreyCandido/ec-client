@@ -17,7 +17,7 @@ export default function Home() {
       cartId: user.cart.id,
       productId,
     });
-    queryClient.invalidateQueries(["cart", user?.cart.id]);
+    queryClient.invalidateQueries(["cart", user?.cart.id] as any); // Gambiarra
     console.log("add item", response);
   };
 

@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { JSX, createContext, useContext } from "react";
 import { Store } from "../data/types/store";
+import { API_PATH } from "../utils/constants";
 
 interface StoresContextProps {
   stores: Store[] | undefined;
@@ -18,8 +19,7 @@ interface StoresProviderProps {
 export const StoresProvider = ({ children }: StoresProviderProps) => {
   const { data, isLoading, error } = useQuery<Store[]>({
     queryKey: ["stores"],
-    queryFn: () =>
-      fetch("http://127.0.0.1:3000/stores").then((res) => res.json()),
+    queryFn: () => fetch(`${API_PATH}/stores`).then((res) => res.json()),
   });
 
   const value = {

@@ -95,7 +95,7 @@ export default function ProfilePage() {
             <button
               onClick={() => {
                 logout();
-                router.replace("/login");
+                router.replace("/auth/login");
               }}
               className="bg-red-500 text-white px-8 py-4 rounded-xl shadow-md hover:bg-red-600 hover:scale-105 transition font-semibold"
             >

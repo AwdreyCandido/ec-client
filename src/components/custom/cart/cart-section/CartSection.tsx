@@ -43,9 +43,9 @@ const CartSection: React.FC<CartSectionProps> = ({
           <FiShoppingCart className="text-secondary" /> Meu Carrinho
         </h2>
 
-        {cart.items.length > 0 ? (
+        {(cart?.items ?? []).length > 0 ? (
           <div className="space-y-8">
-            {cart.items.map((item: any) => (
+            {cart?.items.map((item: any) => (
               <CartItem
                 key={item.id}
                 item={item}

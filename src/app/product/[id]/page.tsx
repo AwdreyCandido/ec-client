@@ -9,6 +9,7 @@ import { addItemToCart } from "@/src/services/cart";
 import { ReviewType } from "@/src/data/types/review";
 import Review from "@/src/components/custom/main/review/Review";
 import PrimaryButton from "@/src/components/ui/Buttons/PrimaryButton";
+import { API_PATH } from "@/src/utils/constants";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +23,7 @@ export default function ProductDetails() {
   } = useQuery<Product>({
     queryKey: ["product", id],
     queryFn: () =>
-      fetch(`http://127.0.0.1:3000/products/${id}`).then((res) => res.json()),
+      fetch(`${API_PATH}/products/${id}`).then((res) => res.json()),
   });
 
   const handleAddCartItem = async (cartId: number, productId: number) => {
@@ -30,7 +31,7 @@ export default function ProductDetails() {
       cartId: cartId,
       productId: productId,
     });
-    queryClient.invalidateQueries(["cart", user?.cart.id]);
+    queryClient.invalidateQueries(["cart", user?.cart.id] as any); // Gambiarra 2
     console.log("Item adicionado ao carrinho:", response);
   };
 

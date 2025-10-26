@@ -12,11 +12,14 @@ export default function CartPage() {
   const { cart, isLoading, error, refetchCart } = useCartProvider();
   const { user } = useAuthProvider();
 
+  console.log(cart, isLoading, error);
   if (isLoading) return <p>Loading...</p>;
   if (error || !cart) return <p>Error: {error?.message}</p>;
 
-  const subtotal =
-    cart.items.reduce((sum, item) => sum + parseFloat(item.totalPrice), 0) || 0;
+  const subtotal = (cart?.items ?? []).reduce(
+    (sum, item) => sum + parseFloat(item.totalPrice),
+    0
+  );
 
   const handleCreateOrder = async () => {
     if (!user) return;
