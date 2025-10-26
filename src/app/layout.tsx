@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree } from "next/font/google";
+import { Figtree, Sora } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "../providers/QueryClientProvider";
 import { StoresProvider } from "../contexts/StoresContext";
@@ -10,6 +10,11 @@ import Footer from "../components/custom/footer/Footer";
 
 const figtreeSans = Figtree({
   variable: "--font-figtree-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+const soraSans = Sora({
+  variable: "--font-sora-sans",
   subsets: ["latin"],
   display: "swap",
 });
@@ -31,7 +36,7 @@ export default function RootLayout({
           <AuthProvider>
             <CartProvider>
               <body
-                className={`${figtreeSans.variable} font-sans overflow-x-hidden antialiased`}
+                className={`${figtreeSans.variable} ${soraSans.variable} font-sans overflow-x-hidden antialiased`}
               >
                 <NavBar />
                 <main className="min-h-screen">{children}</main>

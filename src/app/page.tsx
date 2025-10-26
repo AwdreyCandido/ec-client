@@ -5,6 +5,7 @@ import { addItemToCart } from "@/src/services/cart";
 import { useQueryClient } from "@tanstack/react-query";
 import HeroSection from "../components/custom/home/hero-setion/HeroSection";
 import StoreList from "../components/custom/home/store-list/StoreList";
+import PageLoading from "../components/custom/loading/PageLoading";
 
 export default function Home() {
   const { stores, isLoading, error } = useStoresProvider();
@@ -27,7 +28,7 @@ export default function Home() {
     <main className="flex flex-col items-center min-h-screen bg-background">
       <HeroSection />
       {isLoading ? (
-        <p>Loading...</p> // mudar dps
+        <PageLoading />
       ) : (
         <StoreList stores={stores || []} onAddToCart={handleAddCartItem} />
       )}

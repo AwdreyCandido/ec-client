@@ -38,6 +38,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-figtree-sans);
+  --font-sora: var(--font-sora-sans);
 
   --text-base: var(--text-base);
   --text-button: var(--text-button);

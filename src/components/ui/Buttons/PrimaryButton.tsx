@@ -14,7 +14,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`w-full bg-secondary text-white text-base font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-blue-700 transition duration-300 
+      className={`w-full bg-secondary text-white text-base font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-blue-800 transition duration-300 
         ${
           props.disabled
             ? "cursor-not-allowed bg-secondary-light hover:bg-secondary-light"
