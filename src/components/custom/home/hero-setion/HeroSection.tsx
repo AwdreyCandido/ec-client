@@ -4,7 +4,7 @@ import placeholder from "@/public/assets/images/placeholder.png";
 
 const HeroSection = () => {
   return (
-    <section className="h-screen w-full flex justify-center px-8 md:px-20 py-36 bg-linear-to-br from-secondary-light from-40% to-secondary pt-[15rem] rounded-tl-[15rem] rounded-br-[15rem] shadow-sm">
+    <section className="h-screen w-full flex justify-center px-8 md:px-20 py-36 bg-linear-to-br from-secondary-light from-40% to-secondary rounded-tl-[15rem] rounded-br-[15rem] pt-[15rem] shadow-sm">
       <div className="w-[80vw] max-w-[80vw] flex flex-col md:flex-row items-center justify-between">
         <div className="flex-1 flex justify-center">
           <div className="w-[50rem] h-[40rem] ">

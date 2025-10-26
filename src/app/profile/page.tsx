@@ -1,11 +1,25 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAuthProvider } from "@/src/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { User } from "@/src/data/types/user";
 import { HiOutlinePencilSquare, HiXMark } from "react-icons/hi2";
 import { updateUser, UpdateUserDto } from "@/src/services/user";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import TextInput from "@/src/components/ui/inputs/TextInput";
+import InputError from "@/src/components/custom/input-error/InputError";
+import PrimaryButton from "@/src/components/ui/Buttons/PrimaryButton";
+
+const profileSchema = z.object({
+  name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+  email: z.string().email("Email inválido"),
+  address: z.string().optional(),
+});
+
+type ProfileFormInputs = z.infer<typeof profileSchema>;
 
 const userIcon =
   "https://i.pinimg.com/736x/20/05/e2/2005e27a39fa5f6d97b2e0a95233b2be.jpg";
@@ -15,28 +29,36 @@ export default function ProfilePage() {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
 
-  const [userData, setUserData] = useState<UpdateUserDto>({
-    name: "",
-    email: "",
-    address: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ProfileFormInputs>({
+    resolver: zodResolver(profileSchema),
   });
 
   useEffect(() => {
     if (user) {
-      setUserData({
+      reset({
         name: user.name,
         email: user.email,
         address: user.address ?? "",
       });
     }
-  }, [user]);
+  }, [user, reset]);
 
-  const handleUserData = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.currentTarget;
-    setUserData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleUserData = async (data: ProfileFormInputs) => {
+    if (!user) return;
+
+    const response = await updateUser(user.id, data as UpdateUserDto);
+
+    if (response?.id) {
+      saveUpdatedUser && saveUpdatedUser(response);
+      setIsEditing(false);
+    } else {
+      console.log("Update error:", response?.message);
+    }
   };
 
   if (!user)
@@ -52,22 +74,9 @@ export default function ProfilePage() {
       </main>
     );
 
-  const handleSave = async () => {
-    const response = await updateUser(user.id, userData);
-    if (response?.id) {
-      const user: User = response;
-      console.log(user);
-    } else {
-      console.log("Login error:", response?.message);
-    }
-
-    if (saveUpdatedUser) saveUpdatedUser(userData);
-    setIsEditing(false);
-  };
-
   return (
     <main className="flex flex-col items-center min-h-screen bg-background">
-      <section className="flex flex-col w-screen h-screen justify-center w-[80vw] max-w-[80vw] py-20">
+      <section className="flex flex-col pt-[15rem] justify-center w-[80vw] max-w-[80vw] py-20">
         <div className="flex flex-col md:flex-row items-center justify-between bg-white p-10 rounded-3xl shadow-md mb-10">
           <div className="flex items-center gap-8">
             <div className="relative w-[10rem] h-[10rem] rounded-full overflow-hidden border-4 border-secondary shadow">
@@ -83,12 +92,6 @@ export default function ProfilePage() {
                 Olá, {user.name.split(" ")[0]} 👋
               </h2>
               <p className="text-gray text-base">{user.email}</p>
-              <div className="flex gap-2 text-sm">
-                <p className="text-gray">Membro desde:</p>
-                <p className="text-gray">
-                  {new Date(user.cart.createdAt).toLocaleDateString()}
-                </p>
-              </div>
             </div>
           </div>
           <div className="mt-10 md:mt-0">
@@ -110,70 +113,74 @@ export default function ProfilePage() {
               <h3 className="text-subheading font-bold text-gray-900">
                 Informações pessoais
               </h3>
-              {isEditing ? (
-                <button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className="w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary text-danger p-2 rounded-full bg-danger-light hover:text-white hover:bg-danger transition duration-300  cursor-pointer"
-                >
-                  <HiXMark className="stroke-[0.90]" size={20} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className="w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary text-secondary p-2 rounded-full bg-secondary-light hover:text-white hover:bg-secondary transition duration-300  cursor-pointer"
-                >
-                  <HiOutlinePencilSquare className="stroke-2" size={20} />
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => setIsEditing(!isEditing)}
+                className={`w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-full transition duration-300 cursor-pointer ${
+                  isEditing
+                    ? "bg-danger-light text-danger hover:bg-danger hover:text-white"
+                    : "bg-secondary-light text-secondary hover:bg-secondary hover:text-white"
+                }`}
+              >
+                {isEditing ? (
+                  <HiXMark size={20} />
+                ) : (
+                  <HiOutlinePencilSquare size={20} />
+                )}
+              </button>
             </div>
 
-            <div className="flex flex-col space-y-4">
+            <form
+              onSubmit={handleSubmit(handleUserData)}
+              className="flex flex-col space-y-4"
+            >
               <div>
-                <label className="font-semibold text-gray-800 text-base mb-1 block">
-                  Nome:
-                </label>
                 {isEditing ? (
-                  <input
-                    type="text"
-                    name="name"
-                    value={userData.name}
-                    onChange={handleUserData}
-                    className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
-                  />
+                  <div>
+                    <TextInput
+                      id="name"
+                      label="Nome completo"
+                      placeholder="Seu nome"
+                      {...register("name")}
+                    />
+                    {errors.name && (
+                      <InputError message={errors.name?.message} />
+                    )}
+                  </div>
                 ) : (
                   <p className="text-gray text-base">{user.name}</p>
                 )}
               </div>
 
               <div>
-                <label className="font-semibold text-gray-800 text-base mb-1 block">
-                  Email:
-                </label>
                 {isEditing ? (
-                  <input
-                    type="email"
-                    name="email"
-                    value={userData.email}
-                    onChange={handleUserData}
-                    className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
-                  />
+                  <div>
+                    <TextInput
+                      id="email"
+                      type="email"
+                      label="E-mail"
+                      placeholder="seu@email.com"
+                      {...register("email")}
+                    />
+                    {errors.email && (
+                      <InputError message={errors.email?.message} />
+                    )}
+                  </div>
                 ) : (
                   <p className="text-gray text-base">{user.email}</p>
                 )}
               </div>
 
               <div>
-                <label className="font-semibold text-gray-800 text-base mb-1 block">
-                  Endereço:
-                </label>
                 {isEditing ? (
-                  <input
-                    type="text"
-                    name="address"
-                    value={userData.address}
-                    onChange={handleUserData}
-                    className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
-                  />
+                  <div>
+                    <TextInput
+                      id="address"
+                      label="Endereço"
+                      placeholder="Rua X, nº 123, Pernambuco"
+                      {...register("address")}
+                    />
+                  </div>
                 ) : (
                   <p className="text-gray text-base">
                     {user.address ?? "Não informado"}
@@ -182,14 +189,15 @@ export default function ProfilePage() {
               </div>
 
               {isEditing && (
-                <button
-                  onClick={handleSave}
-                  className="bg-secondary text-white px-6 py-3 rounded-xl shadow-md hover:bg-blue-700 hover:scale-105 transition font-semibold mt-4"
-                >
-                  Salvar alterações
-                </button>
+                <div className="mt-10">
+                  <PrimaryButton
+                    title="Salvar alterações"
+                    type="submit"
+                    disabled={isSubmitting}
+                  />
+                </div>
               )}
-            </div>
+            </form>
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow">
