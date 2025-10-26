@@ -16,7 +16,7 @@ export default function CartPage() {
   if (error || !cart) return <p>Error: {error?.message}</p>;
 
   const subtotal =
-    cart.items.reduce((acc, item) => acc + parseFloat(item.totalPrice), 0) || 0;
+    cart.items.reduce((sum, item) => sum + parseFloat(item.totalPrice), 0) || 0;
 
   const handleCreateOrder = async () => {
     if (!user) return;

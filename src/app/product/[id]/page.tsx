@@ -6,6 +6,9 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { Product } from "@/src/data/types/product";
 import { addItemToCart } from "@/src/services/cart";
+import { ReviewType } from "@/src/data/types/review";
+import Review from "@/src/components/custom/main/review/Review";
+import PrimaryButton from "@/src/components/ui/Buttons/PrimaryButton";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -58,34 +61,21 @@ export default function ProductDetails() {
             <p className="text-gray-500 text-base">
               Estoque disponível: {product?.stock}
             </p>
-            <button
+            <PrimaryButton
+              title=" Adicionar ao carrinho"
               onClick={() => {
                 if (!user) return alert("Faça login primeiro!");
                 handleAddCartItem(user.cart.id, product!.id);
               }}
-              className="bg-blue-600 text-white text-base font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-blue-700 hover:scale-105 transition"
-            >
-              Adicionar ao carrinho
-            </button>
+            />
           </div>
         </div>
 
         <div className="mt-20">
           <h3 className="text-2xl font-bold text-gray-900 mb-6">Avaliações</h3>
           <div className="space-y-6">
-            {product?.reviews?.map((review: any) => (
-              <div
-                key={review.id}
-                className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
-              >
-                <p className="text-yellow-500 font-semibold mb-2">
-                  ⭐ {review.rating}/5
-                </p>
-                <p className="text-gray-700 text-base">{review.comment}</p>
-                <p className="text-gray-400 text-sm mt-2">
-                  {new Date(review.createdAt).toLocaleDateString("pt-BR")}
-                </p>
-              </div>
+            {product?.reviews?.map((review: ReviewType) => (
+              <Review key={review.id} review={review} />
             ))}
           </div>
         </div>

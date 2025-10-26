@@ -17,7 +17,9 @@ export default function StoreDetails() {
       const store = stores?.find((store) => store.id === +id);
       setStore(store);
     }
-  }, [id]);
+  }, [id, stores]);
+
+  if (!store) return <p>Carregando...</p>;
 
   return (
     <main className="flex flex-col items-center min-h-screen bg-gray-50">

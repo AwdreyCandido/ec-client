@@ -1,4 +1,4 @@
-import { Review } from "./review";
+import { ReviewType } from "./review";
 
 export interface Product {
   id: number;
@@ -7,5 +7,5 @@ export interface Product {
   price: number;
   imageUrl: string;
   stock: number;
-  reviews: Review[];
+  reviews: ReviewType[];
 }

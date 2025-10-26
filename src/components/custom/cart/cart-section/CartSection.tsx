@@ -39,6 +39,10 @@ const CartSection: React.FC<CartSectionProps> = ({
   return (
     <div className="w-[80vw] max-w-[80vw] grid grid-cols-1 lg:grid-cols-3 gap-16">
       <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 p-10">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <FiShoppingCart className="text-secondary" /> Meu Carrinho
+        </h2>
+
         {cart.items.length > 0 ? (
           <div className="space-y-8">
             {cart.items.map((item: any) => (
