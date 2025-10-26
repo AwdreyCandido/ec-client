@@ -6,6 +6,7 @@ import { StoresProvider } from "../contexts/StoresContext";
 import { AuthProvider } from "../contexts/AuthContext";
 import { CartProvider } from "../contexts/CartContext";
 import NavBar from "../components/custom/navbar/NavBar";
+import Footer from "../components/custom/footer/Footer";
 
 const figtreeSans = Figtree({
   variable: "--font-figtree-sans",
@@ -29,15 +30,12 @@ export default function RootLayout({
         <StoresProvider>
           <AuthProvider>
             <CartProvider>
-              <body className={`${figtreeSans.variable} font-sans antialiased`}>
+              <body
+                className={`${figtreeSans.variable} font-sans overflow-x-hidden antialiased`}
+              >
                 <NavBar />
                 <main className="min-h-screen">{children}</main>
-                <footer className="w-full bg-gray-900 text-gray-300 text-center py-8">
-                  <p className="mb-4">
-                    © {new Date().getFullYear()} Ecommerce. Todos os direitos
-                    reservados.
-                  </p>
-                </footer>
+                <Footer />
               </body>
             </CartProvider>
           </AuthProvider>

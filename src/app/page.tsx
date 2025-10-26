@@ -13,7 +13,6 @@ export default function Home() {
   const { user } = useAuthProvider();
   const queryClient = useQueryClient();
 
-  if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   const handleAddCartItem = async (cartId: number, productId: number) => {
@@ -54,93 +53,99 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <section id="stores" className="w-full flex justify-center bg-background">
-        <div className="w-[80vw] max-w-[80vw] px-8 md:px-20 py-24 space-y-28">
-          {stores?.map((store) => (
-            <div key={store.id} className="space-y-10">
-              <div className="flex items-center gap-6">
-                <Link href={`/store/${store.id}`}>
-                  <div className="relative w-[10rem] h-[10rem] rounded-full overflow-hidden border-4 border-secondary shadow-md">
-                    <Image
-                      src={store.logoUrl}
-                      alt={store.name}
-                      fill
-                      className="object-cover "
-                    />
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <section
+          id="stores"
+          className="w-full flex justify-center bg-background"
+        >
+          <div className="w-[80vw] max-w-[80vw] px-8 md:px-20 py-24 space-y-28">
+            {stores?.map((store) => (
+              <div key={store.id} className="space-y-10">
+                <div className="flex items-center gap-6">
+                  <Link href={`/store/${store.id}`}>
+                    <div className="relative w-[10rem] h-[10rem] rounded-full overflow-hidden border-4 border-secondary shadow-md">
+                      <Image
+                        src={store.logoUrl}
+                        alt={store.name}
+                        fill
+                        className="object-cover "
+                      />
+                    </div>
+                  </Link>
+                  <div>
+                    <h3 className="text-subheading font-bold text-secondary">
+                      {store.name}
+                    </h3>
+                    <p className="text-gray-600">{store.description}</p>
+                    <p className="text-base text-gray-500 mt-1">
+                      ⭐ {store.ratings} / 5.0
+                    </p>
                   </div>
-                </Link>
-                <div>
-                  <h3 className="text-subheading font-bold text-secondary">
-                    {store.name}
-                  </h3>
-                  <p className="text-gray-600">{store.description}</p>
-                  <p className="text-base text-gray-500 mt-1">
-                    ⭐ {store.ratings} / 5.0
-                  </p>
                 </div>
-              </div>
 
-              {store.products.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-                  {store.products.map((product) => (
-                    <div
-                      key={product.id}
-                      className="group overflow-hidden transition-all duration-300 select-none"
-                    >
-                      <Link
+                {store.products.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+                    {store.products.map((product) => (
+                      <div
                         key={product.id}
-                        href={`/product/${product.id}`}
+                        className="group overflow-hidden transition-all duration-300 select-none"
                       >
-                        <div className="relative rounded-2xl w-full h-56 flex items-center justify-center bg-gray-50 overflow-hidden cursor-pointer">
-                          <Image
-                            src={product.imageUrl}
-                            alt={product.name}
-                            width={200}
-                            height={240}
-                            className="object-contain transition-transform duration-300 group-hover:scale-105"
-                          />
-                          <span className="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
-                            {store.name}
-                          </span>
-                        </div>
-                      </Link>
+                        <Link key={product.id} href={`/product/${product.id}`}>
+                          <div className="relative rounded-2xl w-full h-56 flex items-center justify-center bg-gray-50 overflow-hidden cursor-pointer">
+                            <Image
+                              src={product.imageUrl}
+                              alt={product.name}
+                              width={200}
+                              height={240}
+                              className="object-contain transition-transform duration-300 group-hover:scale-105"
+                            />
+                            <span className="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+                              {store.name}
+                            </span>
+                          </div>
+                        </Link>
 
-                      <div className="py-5 flex flex-col">
-                        <h4 className="text-lg font-semibold text-gray-900 mb-1 truncate group-hover:text-blue-600">
-                          {product.name}
-                        </h4>
-                        <p className="text-gray-500 text-base line-clamp-2 mb-3">
-                          {product.description}
-                        </p>
-                        <div className="mt-auto flex justify-between items-center">
-                          <span className="text-blue-700 font-bold text-xl">
-                            R$ {Number(product.price).toFixed(2)}
-                          </span>
-                          <button
-                            onClick={() => {
-                              if (!user) return alert("Faça login primeiro!");
-                              handleAddCartItem(user.cart.id, product.id);
-                            }}
-                            className="w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary text-secondary p-2 rounded-full bg-secondary-light hover:text-white hover:bg-secondary transition duration-300 shadow-md hover:shadow-none"
-                            title="Adicionar ao carrinho"
-                          >
-                            <TbShoppingBagPlus className="stroke-2" size={20} />
-                          </button>
+                        <div className="py-5 flex flex-col">
+                          <h4 className="text-lg font-semibold text-gray-900 mb-1 truncate group-hover:text-blue-600">
+                            {product.name}
+                          </h4>
+                          <p className="text-gray-500 text-base line-clamp-2 mb-3">
+                            {product.description}
+                          </p>
+                          <div className="mt-auto flex justify-between items-center">
+                            <span className="text-blue-700 font-bold text-xl">
+                              R$ {Number(product.price).toFixed(2)}
+                            </span>
+                            <button
+                              onClick={() => {
+                                if (!user) return alert("Faça login primeiro!");
+                                handleAddCartItem(user.cart.id, product.id);
+                              }}
+                              className="w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary text-secondary p-2 rounded-full bg-secondary-light hover:text-white hover:bg-secondary transition duration-300 shadow-md hover:shadow-none"
+                              title="Adicionar ao carrinho"
+                            >
+                              <TbShoppingBagPlus
+                                className="stroke-2"
+                                size={20}
+                              />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500 italic">
-                  Nenhum produto disponível.
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 italic">
+                    Nenhum produto disponível.
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
