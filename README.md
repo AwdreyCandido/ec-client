@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# 🛒 Next.js E-commerce Frontend 🚀
 
-First, run the development server:
+This is a **Next.js** frontend application for an e-commerce platform. It connects to an API to fetch products, stores, and manage the cart.
+
+## ⚙️ Prerequisites
+
+- Node.js >= 18
+- npm or yarn installed
+- The E-commerce API running locally or deployed
+
+## 🧠 Setup
+
+1. Clone this repository:
+
+```bash
+git clone <repo-url>
+cd <repo-folder>
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Configure API connection:
+
+By default, the frontend points to your local API:
+
+```ts
+// export const API_PATH = "https://ec-api-production.up.railway.app";
+export const API_PATH = "http://localhost:3000";
+```
+
+- To connect to a deployed API, **uncomment the first line** and comment out the second line.
+
+## 🧩 Run the Application
+
+Start the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at: `http://localhost:3001` (or the port shown in your terminal).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+# or
+yarn build
+yarn start
+```
 
-## Learn More
+## Notes
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Ensure the API is running and accessible before using the frontend.
+- All environment-related settings are in `src/utils/constants.ts`.
