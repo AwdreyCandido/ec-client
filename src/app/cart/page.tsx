@@ -4,17 +4,21 @@ import { useCartProvider } from "@/src/contexts/CartContext";
 import { useOrdersProvider } from "@/src/contexts/OrdersContext";
 import { useAuthProvider } from "@/src/contexts/AuthContext";
 import { createOrder, transformCartToOrders } from "@/src/services/cart";
-import CartTabs from "@/src/components/custom/cart/cart-tabs/CartTabs";
-import CartSection from "@/src/components/custom/cart/cart-section/CartSection";
-import OrdersSection from "@/src/components/custom/cart/orders-section/OrdersSection";
 import {
   notifyError,
   notifySuccess,
 } from "@/src/components/custom/notifications/Notifications";
+import { createPaymentIntent } from "@/src/services/payment";
+import CartTabs from "@/src/components/custom/cart/cart-tabs/CartTabs";
+import CartSection from "@/src/components/custom/cart/cart-section/CartSection";
+import OrdersSection from "@/src/components/custom/cart/orders-section/OrdersSection";
 import PageLoading from "@/src/components/custom/loading/PageLoading";
 
 export default function CartPage() {
   const [activeTab, setActiveTab] = useState<"cart" | "orders">("cart");
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+
   const { cart, isLoading, error, refetchCart } = useCartProvider();
   const { user } = useAuthProvider();
   const {
@@ -31,6 +35,30 @@ export default function CartPage() {
     (sum, item) => sum + parseFloat(item.totalPrice),
     0
   );
+
+  const handleCreateCheckout = async () => {
+    if (!user) {
+      notifyError("Usuário não autenticado");
+      return;
+    }
+
+    try {
+      const data = await createPaymentIntent({
+        amount: Math.round(subtotal * 100),
+      });
+      console.log(data);
+      if (!data.clientSecret) {
+        notifyError("Erro ao criar pagamento");
+        return;
+      }
+
+      setClientSecret(data.clientSecret);
+      setShowPaymentForm(true);
+    } catch (err: any) {
+      console.error(err);
+      notifyError("Erro ao processar o pagamento");
+    }
+  };
 
   const handleCreateOrder = async () => {
     if (!user) {
@@ -51,6 +79,8 @@ export default function CartPage() {
       refetchCart();
       refetchOrders();
       notifySuccess("Pedido criado com sucesso!");
+      setShowPaymentForm(false);
+      setClientSecret(null);
     } catch (err: any) {
       console.error("Erro inesperado ao criar pedido:", err);
       notifyError("Ocorreu um erro ao criar o pedido");
@@ -68,6 +98,10 @@ export default function CartPage() {
               subtotal={subtotal}
               refetchCart={refetchCart}
               handleCreateOrder={handleCreateOrder}
+              handleCreateCheckout={handleCreateCheckout}
+              onCloseModal={() => setShowPaymentForm(false)}
+              showPaymentForm={showPaymentForm}
+              clientSecret={clientSecret}
             />
           ) : (
             <OrdersSection orders={orders ?? []} />

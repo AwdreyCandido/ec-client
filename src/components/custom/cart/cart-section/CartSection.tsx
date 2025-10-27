@@ -1,21 +1,36 @@
 import { FiShoppingCart } from "react-icons/fi";
 import { addItemToCart, removeCartItem } from "@/src/services/cart";
+import { notifyError } from "../../notifications/Notifications";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import CartItem from "../cart-item/CartItem";
 import CartSummary from "../cart-summary/CartSummary";
-import { notifyError } from "../../notifications/Notifications";
+import PaymentForm from "@/src/ext/payment-form/PaymentForm";
 
 type CartSectionProps = {
   cart: any;
   subtotal: number;
   refetchCart: () => void;
   handleCreateOrder: () => void;
+  handleCreateCheckout: () => void;
+  onCloseModal: () => void;
+  showPaymentForm: boolean;
+  clientSecret: string | null;
 };
+
+const stripePromise = loadStripe(
+  "pk_test_51SMQyhEXhD4PFG4aMbqKhWmnwsKO1GkOS7gcXNb1o0uOjDRkmOTRuqlY75laECxZ1c0svVbC1AGlJ97HWzU171aV00qOaRms3A"
+);
 
 const CartSection: React.FC<CartSectionProps> = ({
   cart,
   subtotal,
   refetchCart,
   handleCreateOrder,
+  handleCreateCheckout,
+  onCloseModal,
+  showPaymentForm,
+  clientSecret,
 }) => {
   const handleRemoveItem = async (itemId: number) => {
     try {
@@ -82,7 +97,15 @@ const CartSection: React.FC<CartSectionProps> = ({
         )}
       </div>
 
-      <CartSummary subtotal={subtotal} handleCreateOrder={handleCreateOrder} />
+      <CartSummary
+        subtotal={subtotal}
+        handleCreateCheckout={handleCreateCheckout}
+      />
+      {showPaymentForm && clientSecret && (
+        <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <PaymentForm onSuccess={handleCreateOrder} onClose={onCloseModal} />
+        </Elements>
+      )}
     </div>
   );
 };

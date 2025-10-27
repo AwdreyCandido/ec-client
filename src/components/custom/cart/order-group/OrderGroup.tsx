@@ -8,7 +8,7 @@ type OrderGroupProps = {
 const OrderGroup: React.FC<OrderGroupProps> = ({ group }) => (
   <fieldset className="border rounded-2xl p-6">
     <legend className="text-gray bg-secondary-light px-2 rounded-sm mb-2">
-      Pedido #{group.id}
+      Pedido #{group.id} -{" "}
       {new Date(group.createdAt).toLocaleDateString("pt-BR")}
     </legend>
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

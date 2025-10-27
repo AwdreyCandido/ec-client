@@ -2,12 +2,12 @@ import PrimaryButton from "@/src/components/ui/Buttons/PrimaryButton";
 
 type CartSummaryProps = {
   subtotal: number;
-  handleCreateOrder: () => void;
+  handleCreateCheckout: () => void;
 };
 
 const CartSummary: React.FC<CartSummaryProps> = ({
   subtotal,
-  handleCreateOrder,
+  handleCreateCheckout,
 }) => {
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10 h-fit">
@@ -29,7 +29,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({
       </div>
       <PrimaryButton
         title="Finalizar Compra"
-        onClick={handleCreateOrder}
+        onClick={handleCreateCheckout}
         disabled={!subtotal}
       />
     </div>
