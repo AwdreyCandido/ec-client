@@ -1,4 +1,5 @@
 "use client";
+
 import { useStoresProvider } from "@/src/contexts/StoresContext";
 import { useAuthProvider } from "@/src/contexts/AuthContext";
 import { addItemToCart } from "@/src/services/cart";
@@ -37,16 +38,19 @@ export default function Home() {
     }
   };
 
-  if (error) return <p>Error: {error.message}</p>;
+  if (error)
+    return <p className="text-red-500 text-center mt-4">{error.message}</p>;
 
   return (
-    <main className="flex flex-col items-center min-h-screen bg-background">
+    <main className="flex flex-col items-center min-h-screen bg-background pt-[12rem] md:pt-0">
       <HeroSection />
-      {isLoading ? (
-        <PageLoading />
-      ) : (
-        <StoreList stores={stores || []} onAddToCart={handleAddCartItem} />
-      )}
+      <section className="w-full max-w-[1600px] mt-8">
+        {isLoading ? (
+          <PageLoading />
+        ) : (
+          <StoreList stores={stores || []} onAddToCart={handleAddCartItem} />
+        )}
+      </section>
     </main>
   );
 }
