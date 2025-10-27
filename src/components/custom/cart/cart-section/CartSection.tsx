@@ -2,6 +2,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { addItemToCart, removeCartItem } from "@/src/services/cart";
 import CartItem from "../cart-item/CartItem";
 import CartSummary from "../cart-summary/CartSummary";
+import { notifyError } from "../../notifications/Notifications";
 
 type CartSectionProps = {
   cart: any;
@@ -17,23 +18,42 @@ const CartSection: React.FC<CartSectionProps> = ({
   handleCreateOrder,
 }) => {
   const handleRemoveItem = async (itemId: number) => {
-    const response = await removeCartItem(itemId);
-    if (!response.message) refetchCart();
+    try {
+      const response = await removeCartItem(itemId);
+      if (!response.message) {
+        refetchCart();
+      }
+    } catch (error) {
+      console.error("Erro ao remover item do carrinho:", error);
+      notifyError("Erro ao remover item do carrinho");
+    }
   };
 
   const handleUpdateQuantity = async (itemId: number, op: "add" | "remove") => {
-    const item = cart.items.find((i: any) => i.id === itemId);
-    if (!item) return;
-    const newQuantity = op === "remove" ? item.quantity - 1 : item.quantity + 1;
-    if (newQuantity <= 0) return await handleRemoveItem(item.id);
+    try {
+      const item = cart.items.find((i: any) => i.id === itemId);
+      if (!item) return;
 
-    const response = await addItemToCart({
-      cartId: cart.id,
-      productId: item.product.id,
-      quantity: newQuantity,
-    });
+      const newQuantity =
+        op === "remove" ? item.quantity - 1 : item.quantity + 1;
 
-    if (!response.message) refetchCart();
+      if (newQuantity <= 0) {
+        return await handleRemoveItem(item.id);
+      }
+
+      const response = await addItemToCart({
+        cartId: cart.id,
+        productId: item.product.id,
+        quantity: newQuantity,
+      });
+
+      if (!response.message) {
+        refetchCart();
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar quantidade do item:", error);
+      notifyError("Erro ao atualizar quantidade do item");
+    }
   };
 
   return (

@@ -10,6 +10,7 @@ import * as z from "zod";
 import PrimaryButton from "@/src/components/ui/Buttons/PrimaryButton";
 import InputError from "@/src/components/custom/input-error/InputError";
 import TextInput from "@/src/components/ui/inputs/TextInput";
+import { notifySuccess } from "@/src/components/custom/notifications/Notifications";
 
 const registerSchema = z
   .object({
@@ -53,6 +54,7 @@ export default function Register() {
       const user: User = response;
       saveUser(user);
       router.replace("/");
+      notifySuccess("Registro realizado com sucesso");
     } else {
       console.log("Register error:", response?.message);
     }

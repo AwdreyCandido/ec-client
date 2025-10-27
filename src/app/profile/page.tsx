@@ -12,6 +12,10 @@ import * as z from "zod";
 import TextInput from "@/src/components/ui/inputs/TextInput";
 import InputError from "@/src/components/custom/input-error/InputError";
 import PrimaryButton from "@/src/components/ui/Buttons/PrimaryButton";
+import {
+  notifyError,
+  notifySuccess,
+} from "@/src/components/custom/notifications/Notifications";
 
 const profileSchema = z.object({
   name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
@@ -49,21 +53,32 @@ export default function ProfilePage() {
   }, [user, reset]);
 
   const handleUserData = async (data: ProfileFormInputs) => {
-    if (!user) return;
+    if (!user) {
+      notifyError("Usuário não autenticado.");
+      return;
+    }
 
     const response = await updateUser(user.id, data as UpdateUserDto);
 
     if (response?.id) {
       saveUpdatedUser && saveUpdatedUser(response);
       setIsEditing(false);
+      notifySuccess("Usuário atualizado com sucesso");
     } else {
       console.log("Update error:", response?.message);
+      notifyError("Erro ao atualizar usuário");
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/auth/login");
+    if (!user) notifySuccess("Você foi deslogado");
   };
 
   if (!user)
     return (
-      <main className="flex flex-col font-mono items-center justify-center min-h-screen bg-gray-50">
+      <main className="flex flex-col font-sora items-center justify-center min-h-screen bg-gray-50">
         <p className="text-gray text-base mb-4">Você não está logado.</p>
         <button
           onClick={() => router.push("/auth/login")}
@@ -96,10 +111,7 @@ export default function ProfilePage() {
           </div>
           <div className="mt-10 md:mt-0">
             <button
-              onClick={() => {
-                logout();
-                router.replace("/auth/login");
-              }}
+              onClick={handleLogout}
               className="bg-red-500 text-white px-8 py-4 rounded-xl shadow-md hover:bg-red-600 hover:scale-105 transition font-semibold"
             >
               Sair da conta

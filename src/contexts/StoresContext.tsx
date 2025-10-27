@@ -23,12 +23,10 @@ export const StoresProvider = ({ children }: StoresProviderProps) => {
   });
 
   const value = {
-    stores: data,
+    stores: Array.isArray(data) ? data : [],
     isLoading,
     error,
   } as StoresContextProps;
-
-  console.log("data:", data);
 
   return (
     <StoresContext.Provider value={value}>{children}</StoresContext.Provider>

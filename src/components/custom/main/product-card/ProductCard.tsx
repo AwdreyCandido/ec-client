@@ -2,12 +2,14 @@
 import { Product } from "@/src/data/types/product";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { ImSpinner2 } from "react-icons/im";
 import { TbShoppingBagPlus } from "react-icons/tb";
 
 type ProductCardProps = {
   product: Product;
   storeName: string;
-  onAddToCart: (productId: number) => void;
+  onAddToCart: (productId: number) => Promise<void> | void;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -15,6 +17,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
   storeName,
   onAddToCart,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAddToCart = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      await onAddToCart(product.id);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="group overflow-hidden transition-all duration-300 select-none">
       <Link href={`/product/${product.id}`}>
@@ -44,11 +58,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
             R$ {Number(product.price).toFixed(2)}
           </span>
           <button
-            onClick={() => onAddToCart(product.id)}
-            className="w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary text-secondary p-2 rounded-full bg-secondary-light hover:text-white hover:bg-secondary transition duration-300 shadow-md hover:shadow-none"
+            onClick={handleAddToCart}
+            disabled={isLoading}
+            className={`w-[3.5rem] h-[3.5rem] flex items-center justify-center border-secondary p-2 rounded-full shadow-md transition duration-300 ${
+              isLoading
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-secondary-light text-secondary hover:text-white hover:bg-secondary"
+            }`}
             title="Adicionar ao carrinho"
           >
-            <TbShoppingBagPlus className="stroke-2" size={20} />
+            {isLoading ? (
+              <ImSpinner2 className="animate-spin" size={20} />
+            ) : (
+              <TbShoppingBagPlus className="stroke-2" size={20} />
+            )}
           </button>
         </div>
       </div>

@@ -10,6 +10,11 @@ import { ReviewType } from "@/src/data/types/review";
 import Review from "@/src/components/custom/main/review/Review";
 import PrimaryButton from "@/src/components/ui/Buttons/PrimaryButton";
 import { API_PATH } from "@/src/utils/constants";
+import PageLoading from "@/src/components/custom/loading/PageLoading";
+import {
+  notifySuccess,
+  notifyError,
+} from "@/src/components/custom/notifications/Notifications";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -26,16 +31,27 @@ export default function ProductDetails() {
       fetch(`${API_PATH}/products/${id}`).then((res) => res.json()),
   });
 
-  const handleAddCartItem = async (cartId: number, productId: number) => {
-    const response = await addItemToCart({
-      cartId: cartId,
-      productId: productId,
-    });
-    queryClient.invalidateQueries(["cart", user?.cart.id] as any); // Gambiarra 2
-    console.log("Item adicionado ao carrinho:", response);
+  const handleAddCartItem = async (storeId: number, productId: number) => {
+    if (!user) {
+      alert("Faça login primeiro!");
+      return;
+    }
+    try {
+      const response = await addItemToCart({
+        cartId: user.cart.id,
+        productId,
+      });
+
+      queryClient.invalidateQueries(["cart", user.cart.id] as any);
+      notifySuccess("Produto adicionado ao carrinho");
+      console.log("add item", response);
+    } catch (err) {
+      console.error(err);
+      notifyError("Erro ao adicionar produto ao carrinho");
+    }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <PageLoading />;
   if (error) return <p>Error: {error.message}</p>;
 
   return (

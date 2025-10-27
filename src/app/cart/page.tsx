@@ -1,35 +1,59 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCartProvider } from "@/src/contexts/CartContext";
+import { useOrdersProvider } from "@/src/contexts/OrdersContext";
 import { useAuthProvider } from "@/src/contexts/AuthContext";
 import { createOrder, transformCartToOrders } from "@/src/services/cart";
 import CartTabs from "@/src/components/custom/cart/cart-tabs/CartTabs";
 import CartSection from "@/src/components/custom/cart/cart-section/CartSection";
 import OrdersSection from "@/src/components/custom/cart/orders-section/OrdersSection";
+import {
+  notifyError,
+  notifySuccess,
+} from "@/src/components/custom/notifications/Notifications";
+import PageLoading from "@/src/components/custom/loading/PageLoading";
 
 export default function CartPage() {
   const [activeTab, setActiveTab] = useState<"cart" | "orders">("cart");
   const { cart, isLoading, error, refetchCart } = useCartProvider();
   const { user } = useAuthProvider();
+  const {
+    orders,
+    isLoading: loadingOrders,
+    refetchOrders,
+  } = useOrdersProvider();
 
-  console.log(cart, isLoading, error);
-  if (isLoading) return <p>Loading...</p>;
-  if (error || !cart) return <p>Error: {error?.message}</p>;
+  if (isLoading || loadingOrders) return <PageLoading />;
+  if (error || !cart)
+    return <p>Error: {error?.message ?? "Erro ao carregar o carrinho"}</p>;
 
-  const subtotal = (cart?.items ?? []).reduce(
+  const subtotal = (cart.items ?? []).reduce(
     (sum, item) => sum + parseFloat(item.totalPrice),
     0
   );
 
   const handleCreateOrder = async () => {
-    if (!user) return;
-    const orders = transformCartToOrders(cart, user.id);
-    const response = await createOrder(user.id, orders);
-    if (!response.message) {
+    if (!user) {
+      notifyError("Usuário não autenticado");
+      return;
+    }
+
+    try {
+      const ordersData = transformCartToOrders(cart, user.id);
+      const response = await createOrder(user.id, ordersData);
+
+      if (response?.message) {
+        console.error("Erro ao criar pedido:", response.message);
+        notifyError("Erro ao criar pedido");
+        return;
+      }
+
       refetchCart();
-      alert("Pedido criado com sucesso!");
-    } else {
-      console.log("Order error:", response?.message);
+      refetchOrders();
+      notifySuccess("Pedido criado com sucesso!");
+    } catch (err: any) {
+      console.error("Erro inesperado ao criar pedido:", err);
+      notifyError("Ocorreu um erro ao criar o pedido");
     }
   };
 
@@ -46,7 +70,7 @@ export default function CartPage() {
               handleCreateOrder={handleCreateOrder}
             />
           ) : (
-            <OrdersSection orders={[]} />
+            <OrdersSection orders={orders ?? []} />
           )}
         </section>
       </div>

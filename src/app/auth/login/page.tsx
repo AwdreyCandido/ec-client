@@ -10,6 +10,7 @@ import * as z from "zod";
 import PrimaryButton from "@/src/components/ui/Buttons/PrimaryButton";
 import InputError from "@/src/components/custom/input-error/InputError";
 import TextInput from "@/src/components/ui/inputs/TextInput";
+import { notifyError, notifySuccess } from "@/src/components/custom/notifications/Notifications";
 
 const loginSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -46,8 +47,10 @@ export default function Login() {
       const user: User = response;
       saveUser(user);
       router.replace("/");
+      notifySuccess("Login realizado com sucesso");
     } else {
       console.log("Login error:", response?.message);
+      notifyError("Erro ao realizar login");
     }
   };
 

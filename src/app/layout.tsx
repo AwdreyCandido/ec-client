@@ -7,6 +7,8 @@ import { AuthProvider } from "../contexts/AuthContext";
 import { CartProvider } from "../contexts/CartContext";
 import NavBar from "../components/custom/navbar/NavBar";
 import Footer from "../components/custom/footer/Footer";
+import { Toaster } from "react-hot-toast";
+import { OrdersProvider } from "../contexts/OrdersContext";
 
 const figtreeSans = Figtree({
   variable: "--font-figtree-sans",
@@ -35,13 +37,21 @@ export default function RootLayout({
         <StoresProvider>
           <AuthProvider>
             <CartProvider>
-              <body
-                className={`${figtreeSans.variable} ${soraSans.variable} font-sans overflow-x-hidden antialiased`}
-              >
-                <NavBar />
-                <main className="min-h-screen">{children}</main>
-                <Footer />
-              </body>
+              <OrdersProvider>
+                <body
+                  className={`${figtreeSans.variable} ${soraSans.variable} font-sans overflow-x-hidden antialiased`}
+                >
+                  <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                    gutter={8}
+                    toasterId="default"
+                  />
+                  <NavBar />
+                  <main className="min-h-screen">{children}</main>
+                  <Footer />
+                </body>
+              </OrdersProvider>
             </CartProvider>
           </AuthProvider>
         </StoresProvider>
