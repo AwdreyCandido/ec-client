@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCartProvider } from "@/src/contexts/CartContext";
 import { useOrdersProvider } from "@/src/contexts/OrdersContext";
 import { useAuthProvider } from "@/src/contexts/AuthContext";
@@ -13,6 +13,7 @@ import CartTabs from "@/src/components/custom/cart/cart-tabs/CartTabs";
 import CartSection from "@/src/components/custom/cart/cart-section/CartSection";
 import OrdersSection from "@/src/components/custom/cart/orders-section/OrdersSection";
 import PageLoading from "@/src/components/custom/loading/PageLoading";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const [activeTab, setActiveTab] = useState<"cart" | "orders">("cart");
@@ -26,6 +27,13 @@ export default function CartPage() {
     isLoading: loadingOrders,
     refetchOrders,
   } = useOrdersProvider();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.replace("/auth/login");
+    }
+  }, [user]);
 
   if (isLoading || loadingOrders) return <PageLoading />;
   if (error || !cart)

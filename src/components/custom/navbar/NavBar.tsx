@@ -32,7 +32,7 @@ const NavBar: React.FC = () => {
           <Link href="/" className="hover:text-secondary transition">
             Início
           </Link>
-          <Link href="/F#stores" className="hover:text-secondary transition">
+          <Link href="/#stores" className="hover:text-secondary transition">
             Lojas
           </Link>
         </div>
